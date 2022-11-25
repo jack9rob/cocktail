@@ -5,26 +5,37 @@ function App() {
 
   const [cocktails, setCocktails] = useState([])
   const [userInput, setUserInput] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
-  const [isFound, setIsFound] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   async function handleApiCall(e) {
     e.preventDefault()
-    console.log(process.env.REACT_APP_API_URL + `/search.php?s=margarita`)
+    setIsLoading(true)
+    setIsError(false)
     
     fetch(process.env.REACT_APP_API_URL + `/search.php?s=${userInput}`, {'method': "GET"})
     .then(res => res.json())
-    .then(data => setCocktails(data.drinks))
-    
-    
-    
-        
-      // if empty flag it
-      // if not show results
-    
-    // if first search is empty search, search input as ingredient
-
-    // if second search is empty, display "sorry, nothing was found"
+    .then(data => {
+      if (data.drinks) {
+        console.log("drink")
+        setCocktails(data.drinks)
+      } else {
+        // if not found try filtering by ingredients
+        fetch(process.env.REACT_APP_API_URL + `/filter.php?i=${userInput}`, {'method': "GET"})
+        .then(res => res.json())
+        .then(data => {
+          console.log("ingredients")
+          console.log(data)
+          if (data.drinks) setCocktails(data.drinks)
+          else console.log("not found")
+        })
+        // for some reason if filtering by ingedient isnt found, nothing is returned
+        .catch((error) => {
+          console.log(error)
+          setIsError(true)
+        })
+      }
+    })
 
   }
   const onChange = (event) => {
@@ -45,6 +56,8 @@ function App() {
           <li key={index}>{cocktail.strDrink}</li>
         )}
       </ul>
+
+      {isError ? <div>Not Found</div> : <div></div>}
     </div>
   );
 }
