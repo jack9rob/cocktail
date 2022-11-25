@@ -11,10 +11,10 @@ function App() {
   async function handleApiCall(e) {
     e.preventDefault()
     console.log(process.env.REACT_APP_API_URL + `/search.php?s=margarita`)
-    await fetch(process.env.REACT_APP_API_URL + `/search.php?s=${userInput}`, {'method': "GET"})
+    
+    fetch(process.env.REACT_APP_API_URL + `/search.php?s=${userInput}`, {'method': "GET"})
     .then(res => res.json())
     .then(data => setCocktails(data.drinks))
-    
     
     
     
@@ -39,12 +39,12 @@ function App() {
         <input type="submit" value="Search"></input>
       </form> 
       
+      
       <ul>
-        {cocktails.map((cocktail, index) => {
-          <li key={index}>{cocktail.strDrink} </li>
-        })}
+        {cocktails.map((cocktail, index) => 
+          <li key={index}>{cocktail.strDrink}</li>
+        )}
       </ul>
-      <h1>Test</h1>
     </div>
   );
 }
