@@ -57,7 +57,7 @@ function App() {
         )}
       </ul>
 
-      {isError ? <div>Not Found</div> : <div></div>}
+      {isError ? <div>Sorry, Not Found</div> : <div></div>}
     </div>
   );
 }
