@@ -1,71 +1,17 @@
 import './App.css';
-import {useState} from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import React, { useState } from 'react';
+import Home from './pages/home';
+import View from './pages/view';
 
-function App() {
-
-  const [cocktails, setCocktails] = useState([])
-  const [userInput, setUserInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [isError, setIsError] = useState(false)
-
-  async function handleApiCall(e) {
-    e.preventDefault()
-    setIsLoading(true)
-    setIsError(false)
-    
-    fetch(process.env.REACT_APP_API_URL + `/search.php?s=${userInput}`, {'method': "GET"})
-    .then(res => res.json())
-    .then(data => {
-      if (data.drinks) {
-        console.log("drink")
-        setCocktails(data.drinks)
-        setIsLoading(false)
-      } else {
-        // if not found try filtering by ingredients
-        fetch(process.env.REACT_APP_API_URL + `/filter.php?i=${userInput}`, {'method': "GET"})
-        .then(res => res.json())
-        .then(data => {
-          console.log("ingredients")
-          console.log(data)
-          if (data.drinks) {
-            setCocktails(data.drinks)
-            setIsLoading(false)
-          }
-          else console.log("not found")
-        })
-        // for some reason if filtering by ingedient isnt found, nothing is returned
-        .catch((error) => {
-          console.log(error)
-          setIsError(true)
-          setIsLoading(false)
-        })
-      }
-    })
-
-  }
-  const onChange = (event) => {
-    setUserInput(event.target.value)
-  }
-
+export default function App() {
   return (
-    <div className="App">
-      <form onSubmit={handleApiCall}>
-        <label htmlFor='userInput'></label>
-        <input name='userinput' type='text' value={userInput} onChange={onChange}></input>
-        <input type="submit" value="Search"></input>
-      </form> 
-      
-      {isLoading ? 
-        <div>Loading</div> : 
-        <ul>
-          {cocktails.map((cocktail, index) => 
-            <li key={index}>{cocktail.strDrink}</li>
-          )}
-        </ul>
-      }
-      {isError ? <div>Sorry, Not Found</div> : <div></div>}
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+      <Route exact path="/" element={<Home />} />
+      <Route exact path="/home" element={<Home />} />
+      <Route exact path ="/view/:id" element={<View/>} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
-
-export default App;
