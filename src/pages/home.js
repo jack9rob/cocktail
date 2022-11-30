@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { useSearchParams, Link } from "react-router-dom/dist";
+import { useSearchParams, Link, useLocation} from "react-router-dom";
 
 export default function Home() {
     const [cocktails, setCocktails] = useState([])
@@ -7,18 +7,26 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(false)
     const [searchParams, setSearchParams] = useSearchParams()
+
+    //trying to get previous drink searched
+    const location = useLocation()
+    const {previous} = location.state
     
     useEffect( () => {
-        const name = searchParams.get('previous')
-        setUserInput(name)
-        fetchCocktial()
+      if(previous !== undefined)
+        fetchCocktial(previous)
     }, [])
 
-    async function fetchCocktial() {
+    async function fetchCocktial(name) {
         setIsLoading(true)
         setIsError(false)
-
-        fetch(process.env.REACT_APP_API_URL + `/search.php?s=${userInput}`, {'method': "GET"})
+        let cocktailName = userInput
+        if(name !== undefined) {
+          cocktailName = name
+          setUserInput(name)
+        }
+        console.log(cocktailName)
+        fetch(process.env.REACT_APP_API_URL + `/search.php?s=${cocktailName}`, {'method': "GET"})
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -28,7 +36,7 @@ export default function Home() {
             setIsLoading(false)
           } else {
             // if not found try filtering by ingredients
-            fetch(process.env.REACT_APP_API_URL + `/filter.php?i=${userInput}`, {'method': "GET"})
+            fetch(process.env.REACT_APP_API_URL + `/filter.php?i=${cocktailName}`, {'method': "GET"})
             .then(res => res.json())
             .then(data => {
               console.log("ingredients")
