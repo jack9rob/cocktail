@@ -10,11 +10,14 @@ export default function Home() {
 
     //trying to get previous drink searched
     const location = useLocation()
-    const {previous} = location.state
+    //const {previous} = location.state
     
     useEffect( () => {
-      if(previous !== undefined)
+      if(location.state !== null) {
+        const {previous} = location.state
         fetchCocktial(previous)
+      }
+
     }, [])
 
     async function fetchCocktial(name) {
@@ -52,6 +55,7 @@ export default function Home() {
               console.log(error)
               setIsError(true)
               setIsLoading(false)
+              setCocktails([])
             })
           }
         })
@@ -71,21 +75,36 @@ export default function Home() {
     return (
       <div className="App">
         <form onSubmit={handleApiCall}>
-          <label htmlFor='userInput'></label>
-          <input name='userinput' type='text' value={userInput} onChange={onChange}></input>
-          <input type="submit" value="Search"></input>
+          <label htmlFor='userInput' className='form-label'></label>
+          <div className="row d-flex justify-content-center">
+            <div>
+              <p>Enter a drink name or ingredient!</p>
+            </div>
+            <div className="row-md-6 w-25 mb-3">
+              <input name='userInput' className="form-control" type='text' value={userInput} onChange={onChange}></input>
+            </div>
+            <div className="row-md-6">
+              <input type="submit" value="Search"></input>
+            </div>
+            
+          </div>
+
+          
         </form> 
         
         {isLoading ? 
-          <div>Loading</div> : 
-          <ul>
-            {cocktails.map((cocktail, index) => 
-              <li key={index}>
-                <Link to={`/view/${cocktail.idDrink}`} state={{previous: userInput}}>{cocktail.strDrink}</Link> 
+          <div className="mt-5">Loading...</div> : 
+          <div className="list-group mt-5">
+            {cocktails.map((cocktail, index) =>
+            <div className="d-flex justify-content-center mb-2" key={index}>
+                <Link to={`/view/${cocktail.idDrink}`} state={{data: [cocktail, userInput]}}  className="list-group-item list-group-item-action w-25">
+                  {cocktail.strDrink}
                 {/*<img src={cocktail.strDrinkThumb + '/preview'} height="100" width="100"/>*/}
-            </li>
+                </Link> 
+            </div> 
+
             )}
-          </ul>
+          </div>
         }
         {isError ? <div>Sorry, Not Found</div> : <div></div>}
       </div>
