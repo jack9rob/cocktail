@@ -10,11 +10,14 @@ export default function Home() {
 
     //trying to get previous drink searched
     const location = useLocation()
-    const {previous} = location.state
+    //const {previous} = location.state
     
     useEffect( () => {
-      if(previous !== undefined)
+      if(location.state !== null) {
+        const {previous} = location.state
         fetchCocktial(previous)
+      }
+
     }, [])
 
     async function fetchCocktial(name) {
@@ -71,8 +74,8 @@ export default function Home() {
     return (
       <div className="App">
         <form onSubmit={handleApiCall}>
-          <label htmlFor='userInput'></label>
-          <input name='userinput' type='text' value={userInput} onChange={onChange}></input>
+          <label htmlFor='userInput' className='form-label'></label>
+          <input name='userinput' className="form-control" type='text' value={userInput} onChange={onChange}></input>
           <input type="submit" value="Search"></input>
         </form> 
         
