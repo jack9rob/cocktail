@@ -97,7 +97,7 @@ export default function Home() {
           <div className="list-group mt-5">
             {cocktails.map((cocktail, index) =>
             <div className="d-flex justify-content-center mb-2" key={index}>
-                <Link to={`/view/${cocktail.idDrink}`} state={{previous: userInput}}  className="list-group-item list-group-item-action w-25">
+                <Link to={`/view/${cocktail.idDrink}`} state={{data: [cocktail, userInput]}}  className="list-group-item list-group-item-action w-25">
                   {cocktail.strDrink}
                 {/*<img src={cocktail.strDrinkThumb + '/preview'} height="100" width="100"/>*/}
                 </Link> 
