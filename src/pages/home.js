@@ -32,7 +32,7 @@ export default function Home() {
         fetch(process.env.REACT_APP_API_URL + `/search.php?s=${cocktailName}`, {'method': "GET"})
         .then(res => res.json())
         .then(data => {
-            console.log(data)
+          console.log(data)
           if (data.drinks) {
             console.log("drink")
             setCocktails(data.drinks)

@@ -38,37 +38,49 @@ export default function View(props) {
 
 
     return (
-        <div>
-        <Link to={`/home`} state={{previous: previous}} className="btn btn-primary position-absolute m-3">Back</Link>
+        <div className="">
         {isLoading ? 
           <div className="mt-5">Loading...</div> : 
-            <div>
-                <div className="d-flex justify-content-center m-3">
-                    <h1 className="align-self-center"> {cocktail.strDrink}</h1>
-                </div>
-                <img className="img-fluid rounded mx-auto d-block w-25" src={cocktail.strDrinkThumb} alt="..."/>
-                <div className="list-group mt-5"> 
-                    <h3 className="d-flex justify-content-center mb-3">
-                        Description
-                    </h3>
-                    <div className="d-flex justify-content-center  w-25 m-auto">
-                        <p>{cocktail.strInstructions}</p>
+            <div class="container mt-5 bg-light">
+                <div className="row">
+                    <div className="col-1">
+                        <Link to={`/home`} state={{previous: previous}} className="btn btn-primary">Back</Link>
                     </div>
-                    <h3 className="d-flex justify-content-center mb-3 mt-3">
-                        Ingredients
-                    </h3>
-                    {ingredients.map((ingredient, index) =>
-                        <div className="d-flex justify-content-center text-center mb-2" key={index}>
-                            <Link to={'/home'} state={{previous: ingredient.ingredient}} className="list-group-item list-group-item-action w-25">
-                                {ingredient.ingredient} {ingredient.measurement}
-                            </Link>
-                        </div> 
+                    <div className="col-5 w-50">
+                        <row className="text-center">
+                            <h1 className=""> {cocktail.strDrink}</h1>
+                        </row>
+                        <row>
+                            <img className="img-fluid" src={cocktail.strDrinkThumb} alt="..."/>
+                        </row>
+                        
+                    </div>
+                    <div className="col-10 w-25">
+                        <row>
+                            <h3 className="">
+                                Description
+                            </h3>
+                            <div className="d-flex justify-content-center">
+                                <p>{cocktail.strInstructions}</p>
+                            </div>
+                        </row>
+                        <row>
+                            <h3>Ingredients</h3>
+                            <div className="list-group">
+                                {ingredients.map((ingredient, index) =>
+                                <div className="d-flex justify-content-center text-center mb-2" key={index}>
+                                    <Link to={'/home'} state={{previous: ingredient.ingredient}} className="list-group-item list-group-item-action">
+                                        {ingredient.ingredient} {ingredient.measurement}
+                                    </Link>
+                                </div> 
+                                )}
+                            </div>
+                        </row>
 
-                    )}
+                    </div>
                 </div>
             </div>
-            }
-        </div>
-        
+        }
+        </div>  
     )
 }
