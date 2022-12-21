@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation} from "react-router-dom";
 
 export default function View(props) {
     const location = useLocation()
@@ -31,7 +31,7 @@ export default function View(props) {
             if(tempIngr == null) {
                 break;
             }
-            tempArray.push(tempIngr)
+            tempArray.push({ingredient: tempIngr, measurement: tempMeasure})
         }
         setIngredients(tempArray)
     }
@@ -39,22 +39,29 @@ export default function View(props) {
 
     return (
         <div>
+        <Link to={`/home`} state={{previous: previous}} className="btn btn-primary position-absolute m-3">Back</Link>
         {isLoading ? 
           <div className="mt-5">Loading...</div> : 
             <div>
-                <div className="d-flex justify-content-between m-3">
-                    <Link to={`/home`} state={{previous: previous}} className="btn btn-primary align-self-center">Back</Link>
+                <div className="d-flex justify-content-center m-3">
                     <h1 className="align-self-center"> {cocktail.strDrink}</h1>
-                    <div></div>
                 </div>
-                <div>
-                    description
-                </div>
-                <div>
-                    <p>ingredient list</p>
+                <img className="img-fluid rounded mx-auto d-block w-25" src={cocktail.strDrinkThumb} alt="..."/>
+                <div className="list-group mt-5"> 
+                    <h3 className="d-flex justify-content-center mb-3">
+                        Description
+                    </h3>
+                    <div className="d-flex justify-content-center  w-25 m-auto">
+                        <p>{cocktail.strInstructions}</p>
+                    </div>
+                    <h3 className="d-flex justify-content-center mb-3 mt-3">
+                        Ingredients
+                    </h3>
                     {ingredients.map((ingredient, index) =>
-                        <div className="d-flex justify-content-center mb-2" key={index}>
-                            {ingredient}
+                        <div className="d-flex justify-content-center text-center mb-2" key={index}>
+                            <Link to={'/home'} state={{previous: ingredient.ingredient}} className="list-group-item list-group-item-action w-25">
+                                {ingredient.ingredient} {ingredient.measurement}
+                            </Link>
                         </div> 
 
                     )}
