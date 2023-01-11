@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { Link, useLocation} from "react-router-dom";
+import React, {useEffect, useState,} from "react";
+import { Link, useLocation, useParams} from "react-router-dom";
 
 export default function View(props) {
     const location = useLocation()
@@ -7,6 +7,7 @@ export default function View(props) {
     const [cocktail, setCocktail] = useState([])
     const [ingredients, setIngredients] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const {id} = useParams()
 
     useEffect( () => {
         console.log("drink l", location.state)
@@ -48,7 +49,7 @@ export default function View(props) {
                     </div>
                     <div className="col-5 w-50">
                         <row className="text-center">
-                            <h1 className=""> {cocktail.strDrink}</h1>
+                            <h1 className=""> {cocktail.strDrink} / {id}</h1>
                         </row>
                         <row>
                             <img className="img-fluid" src={cocktail.strDrinkThumb} alt="..."/>
