@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { useSearchParams, Link, useLocation} from "react-router-dom";
+import {getCocktailById, getCocktailsByName, getCocktailsByIngredient} from "../api/api"
 
 export default function Home() {
     const [cocktails, setCocktails] = useState([])
@@ -29,36 +30,27 @@ export default function Home() {
           setUserInput(name)
         }
         console.log(cocktailName)
-        fetch(process.env.REACT_APP_API_URL + `/search.php?s=${cocktailName}`, {'method': "GET"})
-        .then(res => res.json())
-        .then(data => {
+
+        // search by name
+        let data = await getCocktailsByName(cocktailName)
+        console.log()
+        if(data) {
+          console.log("found name")
           console.log(data)
-          if (data.drinks) {
-            console.log("drink")
-            setCocktails(data.drinks)
-            setIsLoading(false)
-          } else {
-            // if not found try filtering by ingredients
-            fetch(process.env.REACT_APP_API_URL + `/filter.php?i=${cocktailName}`, {'method': "GET"})
-            .then(res => res.json())
-            .then(data => {
-              console.log("ingredients")
-              console.log(data)
-              if (data.drinks) {
-                setCocktails(data.drinks)
-                setIsLoading(false)
-              }
-              else console.log("not found")
-            })
-            // for some reason if filtering by ingedient isnt found, nothing is returned
-            .catch((error) => {
-              console.log(error)
-              setIsError(true)
-              setIsLoading(false)
-              setCocktails([])
-            })
+          setCocktails(data)
+          setIsLoading(false)
+        } else {
+          let data = await getCocktailsByIngredient(cocktailName)
+          console.log("ingredient fetch", data)
+          if(data) {
+            setCocktails(data)
+            console.log("found ingre")
+            return
           }
-        })
+          console.log("not found")
+          setIsError(true)
+          setIsLoading(false)
+        }
     }
     
     async function handleApiCall(e) {
@@ -97,7 +89,7 @@ export default function Home() {
           <div className="list-group mt-5">
             {cocktails.map((cocktail, index) =>
             <div className="d-flex justify-content-center mb-2" key={index}>
-                <Link to={`/view/${cocktail.idDrink}`} state={{data: [cocktail, userInput]}}  className="list-group-item list-group-item-action w-25">
+                <Link to={`/view/${cocktail.idDrink}`} state={{data: userInput}}  className="list-group-item list-group-item-action w-25">
                   {cocktail.strDrink}
                 {/*<img src={cocktail.strDrinkThumb + '/preview'} height="100" width="100"/>*/}
                 </Link> 

@@ -1,5 +1,6 @@
 import React, {useEffect, useState,} from "react";
 import { Link, useLocation, useParams} from "react-router-dom";
+import { getCocktailById} from "../api/api"
 
 export default function View(props) {
     const location = useLocation()
@@ -10,31 +11,38 @@ export default function View(props) {
     const {id} = useParams()
 
     useEffect( () => {
+        (async () => {
+            let cocktailFetch = await getCocktailById(id)
+            setCocktail(cocktailFetch)
+            setIsLoading(false)
+            setIngredients(getIngredients())
+        })();
+
+        /*
         console.log("drink l", location.state)
         if(location.state !== null) {
             const temp = location.state
-            console.log("drink", temp.data[0])
-            console.log("previous", temp.data[1])
+            console.log("previous", temp.data)
             setCocktail(temp.data[0])
             setIsLoading(false)
             setIngredients([])
             getIngredients()
             setPrevious(temp.data[1])
         }
-    }, [cocktail])
+        */
+    }, )
 
     function getIngredients() {
         let tempArray = []
         for(let i = 1; i <= 15; i++) {
             let tempIngr = cocktail["strIngredient" + i]
             let tempMeasure = cocktail["strMeasure" + i]
-            console.log("ingre", tempIngr)
             if(tempIngr == null) {
                 break;
             }
             tempArray.push({ingredient: tempIngr, measurement: tempMeasure})
         }
-        setIngredients(tempArray)
+        return tempArray
     }
 
 
