@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
-import { useSearchParams, Link, useLocation} from "react-router-dom";
-import {getCocktailById, getCocktailsByName, getCocktailsByIngredient} from "../api/api"
+import { Link,} from "react-router-dom";
+import { getCocktailsByName, getCocktailsByIngredient} from "../api/api"
 
 export default function Home() {
     const [cocktails, setCocktails] = useState([])
@@ -9,18 +9,13 @@ export default function Home() {
     const [isError, setIsError] = useState(false)
     const queryParameters = new URLSearchParams(window.location.search)
     const previous = queryParameters.get("previous")
-
-    //trying to get previous drink searched
-    const location = useLocation()
-    //const {previous} = location.state
     
     useEffect( () => {
-      console.log("previous:", previous)
       if(previous) {
         fetchCocktial(previous)
       }
 
-    }, [])
+    }, [previous])
 
     async function fetchCocktial(name) {
         setIsLoading(true)
@@ -30,27 +25,21 @@ export default function Home() {
           cocktailName = name
           setUserInput(name)
         }
-        console.log(cocktailName)
 
         // search by name
         let data = await getCocktailsByName(cocktailName)
-        console.log()
         if(data) {
-          console.log("found name")
-          console.log(data)
           setCocktails(data)
           setIsLoading(false)
         } else {
           let data = await getCocktailsByIngredient(cocktailName)
-          console.log("ingredient fetch", data)
           if(data) {
             setCocktails(data)
-            console.log("found ingre")
             return
           }
-          console.log("not found")
           setIsError(true)
           setIsLoading(false)
+          setCocktails([])
         }
     }
     

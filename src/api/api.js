@@ -8,10 +8,7 @@ export async function getCocktailsByName(name) {
     await fetch(process.env.REACT_APP_API_URL + `/search.php?s=${name}`, {'method': "GET"})
     .then(res => res.json())
     .then(data => {
-        console.log(data)
         if (data.drinks) {
-            console.log(data.drinks)
-            console.log("drink")
             cocktails = data.drinks
         }
     })
@@ -33,9 +30,7 @@ export async function getCocktailsByIngredient(name) {
             cocktails = data.drinks
         }
     })
-    .catch((error) => {
-        console.log(error)
-        
+    .catch((error) => { // if api doesn't find an ingredient it sends an error for some reason 
     })
 
     return cocktails

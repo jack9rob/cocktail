@@ -1,5 +1,5 @@
 import React, {useEffect, useState,} from "react";
-import { Link, useLocation, useParams} from "react-router-dom";
+import { Link, useParams} from "react-router-dom";
 import { getCocktailById} from "../api/api"
 
 export default function View() {
@@ -17,20 +17,7 @@ export default function View() {
             setIsLoading(false)
             setIngredients(getIngredients())
         })();
-
-        /*
-        console.log("drink l", location.state)
-        if(location.state !== null) {
-            const temp = location.state
-            console.log("previous", temp.data)
-            setCocktail(temp.data[0])
-            setIsLoading(false)
-            setIngredients([])
-            getIngredients()
-            setPrevious(temp.data[1])
-        }
-        */
-    }, )
+    }, [])
 
     function getIngredients() {
         let tempArray = []
@@ -49,31 +36,31 @@ export default function View() {
     return (
         <div className="">
         {isLoading ? 
-          <div className="mt-5">Loading...</div> : 
-            <div class="container mt-5 bg-light">
+          <center className="mt-5">Loading...</center> : 
+            <div className="container mt-5 bg-light">
                 <div className="row">
                     <div className="col-1">
                         <Link to={`/home?previous=${previous}`} className="btn btn-primary">Back</Link>
                     </div>
                     <div className="col-5 w-50">
-                        <row className="text-center">
-                            <h1 className=""> {cocktail.strDrink} / {id}</h1>
-                        </row>
-                        <row>
+                        <div className=" row text-center">
+                            <h1 className=""> {cocktail.strDrink}</h1>
+                        </div>
+                        <div className="row">
                             <img className="img-fluid" src={cocktail.strDrinkThumb} alt="..."/>
-                        </row>
+                        </div>
                         
                     </div>
                     <div className="col-10 w-25">
-                        <row>
+                        <div className="row">
                             <h3 className="">
                                 Description
                             </h3>
                             <div className="d-flex justify-content-center">
                                 <p>{cocktail.strInstructions}</p>
                             </div>
-                        </row>
-                        <row>
+                        </div>
+                        <div className="row">
                             <h3>Ingredients</h3>
                             <div className="list-group">
                                 {ingredients.map((ingredient, index) =>
@@ -84,8 +71,7 @@ export default function View() {
                                 </div> 
                                 )}
                             </div>
-                        </row>
-
+                        </div>
                     </div>
                 </div>
             </div>
