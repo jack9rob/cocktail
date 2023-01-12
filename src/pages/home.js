@@ -7,15 +7,16 @@ export default function Home() {
     const [userInput, setUserInput] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(false)
-    const [searchParams, setSearchParams] = useSearchParams()
+    const queryParameters = new URLSearchParams(window.location.search)
+    const previous = queryParameters.get("previous")
 
     //trying to get previous drink searched
     const location = useLocation()
     //const {previous} = location.state
     
     useEffect( () => {
-      if(location.state !== null) {
-        const {previous} = location.state
+      console.log("previous:", previous)
+      if(previous) {
         fetchCocktial(previous)
       }
 
@@ -89,7 +90,7 @@ export default function Home() {
           <div className="list-group mt-5">
             {cocktails.map((cocktail, index) =>
             <div className="d-flex justify-content-center mb-2" key={index}>
-                <Link to={`/view/${cocktail.idDrink}`} state={{data: userInput}}  className="list-group-item list-group-item-action w-25">
+                <Link to={`/view/${cocktail.idDrink}?previous=${userInput}`} className="list-group-item list-group-item-action w-25">
                   {cocktail.strDrink}
                 {/*<img src={cocktail.strDrinkThumb + '/preview'} height="100" width="100"/>*/}
                 </Link> 

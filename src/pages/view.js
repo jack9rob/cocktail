@@ -2,13 +2,13 @@ import React, {useEffect, useState,} from "react";
 import { Link, useLocation, useParams} from "react-router-dom";
 import { getCocktailById} from "../api/api"
 
-export default function View(props) {
-    const location = useLocation()
-    const [previous, setPrevious] = useState("")
+export default function View() {
     const [cocktail, setCocktail] = useState([])
     const [ingredients, setIngredients] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const {id} = useParams()
+    const queryParameters = new URLSearchParams(window.location.search)
+    const previous = queryParameters.get("previous")
 
     useEffect( () => {
         (async () => {
@@ -53,7 +53,7 @@ export default function View(props) {
             <div class="container mt-5 bg-light">
                 <div className="row">
                     <div className="col-1">
-                        <Link to={`/home`} state={{previous: previous}} className="btn btn-primary">Back</Link>
+                        <Link to={`/home?previous=${previous}`} className="btn btn-primary">Back</Link>
                     </div>
                     <div className="col-5 w-50">
                         <row className="text-center">
