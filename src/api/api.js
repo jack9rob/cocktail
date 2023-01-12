@@ -1,15 +1,14 @@
-async function getCocktailsByName(name) {
-    if(name == null || name == undefined) {
+export async function getCocktailsByName(name) {
+    if(name === null || name === undefined) {
         return null
     }
 
-    let cocktails = null
+    let cocktails = undefined
 
     await fetch(process.env.REACT_APP_API_URL + `/search.php?s=${name}`, {'method': "GET"})
     .then(res => res.json())
     .then(data => {
         if (data.drinks) {
-            console.log("drink")
             cocktails = data.drinks
         }
     })
@@ -17,8 +16,8 @@ async function getCocktailsByName(name) {
     return cocktails
 }
 
-async function getCocktailsByIngredient(name) {
-    if(name == null || name == undefined) {
+export async function getCocktailsByIngredient(name) {
+    if(name === null || name === undefined) {
         return null
     }
 
@@ -28,25 +27,29 @@ async function getCocktailsByIngredient(name) {
     .then(res => res.json())
     .then(data => {
         if (data.drinks) {
-            console.log("drink")
             cocktails = data.drinks
         }
+    })
+    .catch((error) => { // if api doesn't find an ingredient it sends an error for some reason 
     })
 
     return cocktails
 }
 
-async function getCocktailById(id) {
-    if(id == null || id == undefined) {
+export async function getCocktailById(id) {
+    if(id === null || id === undefined) {
         return null
     }
+
+    let cocktails = null
 
     await fetch(process.env.REACT_APP_API_URL + `/lookup.php?i=${id}`, {'method': "GET"})
     .then(res => res.json())
     .then(data => {
         if (data.drinks) {
-            console.log("drink")
-            cocktails = data.drinks
+            cocktails = data.drinks[0]
         }
     })
+
+    return cocktails
 }
